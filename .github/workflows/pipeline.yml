@@ -27,7 +27,7 @@ jobs:
         env:
           PYTHONPATH: .
         run: |
-          pytest
+          pytest tests/
 
       - name: Entrenar Modelo
         run: |
