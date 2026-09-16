@@ -1,6 +1,7 @@
 import os
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model 
+import LinearRegression
 import joblib
 
 os.makedirs("models", exist_ok=True)
