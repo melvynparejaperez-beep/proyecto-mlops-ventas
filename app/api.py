@@ -1,7 +1,7 @@
  from fastapi import FastAPI
 import joblib
 
-app = FastAPI()
+app = FastAPI(title="API MLOps Ventas")
 # joblib.load(...) carga el modelo entrenado
 modelo = joblib.load("models/modelo.pkl")
 
