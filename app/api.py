@@ -1,16 +1,19 @@
 from fastapi import FastAPI
 import joblib
 
-app = FastAPI()
+app = FastAPI(title="API MLOps Ventas")
 
+# Cargar el modelo entrenado
 modelo = joblib.load("models/modelo.pkl")
 
+@app.get("/")
+def inicio():
+    return {"estado": "activo"}
+
 @app.get("/predict")
-def predict(dia:int):
-
-resultado = modelo.predict([[dia]])
-
-return {
-"dia":dia,
-"prediccion":float(resultado[0])
-}
+def predict(dia: int):
+    resultado = modelo.predict([[dia]])
+    return {
+        "dia": dia,
+        "prediccion": float(resultado[0])
+    }
