@@ -35,7 +35,7 @@ jobs:
           
       - name: Construir imagen Docker
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-mlops-ventas:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mlops-ventas:latest .
 
       - name: Iniciar sesión en Docker Hub
         uses: docker/login-action@v3
@@ -45,4 +45,4 @@ jobs:
 
       - name: Subir imagen a Docker Hub
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-mlops-ventas:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mlops-ventas:latest
