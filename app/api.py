@@ -21,7 +21,7 @@ ACTIVE_MODEL = "BLUE"
 # ==========================
 
 class Entrada(BaseModel):
-  dia: int
+    dia: int
 
 
 # ==========================
