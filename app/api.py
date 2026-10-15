@@ -9,7 +9,6 @@ app = FastAPI()
 # ==========================
 
 modelo_blue = joblib.load("models/modelo.pkl")
-
 modelo_green = joblib.load("models/modelo_nuevo.pkl")
 
 # Modelo activo en producción
@@ -30,11 +29,10 @@ class Entrada(BaseModel):
 
 @app.get("/")
 def inicio():
-
-return {
-"estado": "activo",
-"modelo_activo": ACTIVE_MODEL
-}
+    return {
+        "estado": "activo",
+        "modelo_activo": ACTIVE_MODEL
+    }
 
 
 # ==========================
@@ -43,20 +41,16 @@ return {
 
 @app.post("/predict")
 def predict(datos: Entrada):
+    if ACTIVE_MODEL == "BLUE":
+        resultado = modelo_blue.predict([[datos.dia]])
+    else:
+        resultado = modelo_green.predict([[datos.dia]])
 
-if ACTIVE_MODEL == "BLUE":
-
-resultado = modelo_blue.predict([[datos.dia]])
-
-else:
-
-resultado = modelo_green.predict([[datos.dia]])
-
-return {
-"modelo_utilizado": ACTIVE_MODEL,
-"dia": datos.dia,
-"prediccion": float(resultado[0])
-}
+    return {
+        "modelo_utilizado": ACTIVE_MODEL,
+        "dia": datos.dia,
+        "prediccion": float(resultado[0])
+    }
 
 
 # ==========================
@@ -65,22 +59,18 @@ return {
 
 @app.put("/switch/{color}")
 def switch_model(color: str):
+    global ACTIVE_MODEL
+    color = color.upper()
 
-global ACTIVE_MODEL
+    if color not in ["BLUE", "GREEN"]:
+        return {
+            "error": "Debe elegir BLUE o GREEN"
+        }
 
-color = color.upper()
-
-if color not in ["BLUE", "GREEN"]:
-
-return {
-"error": "Debe elegir BLUE o GREEN"
-}
-
-ACTIVE_MODEL = color
-
-return {
-"mensaje": f"Producción ahora utiliza {ACTIVE_MODEL}"
-}
+    ACTIVE_MODEL = color
+    return {
+        "mensaje": f"Producción ahora utiliza {ACTIVE_MODEL}"
+    }
 
 
 # ==========================
@@ -89,22 +79,15 @@ return {
 
 @app.put("/reload-model")
 def reload_model():
+    global modelo_blue
+    global modelo_green
 
-global modelo_blue
-global modelo_green
+    modelo_blue = joblib.load("models/modelo.pkl")
+    modelo_green = joblib.load("models/modelo_nuevo.pkl")
 
-modelo_blue = joblib.load(
-"models/modelo.pkl"
-)
-
-modelo_green = joblib.load(
-"models/modelo_nuevo.pkl"
-)
-
-return {
-"mensaje":
-"Modelos recargados correctamente"
-}
+    return {
+        "mensaje": "Modelos recargados correctamente"
+    }
 
 
 # ==========================
@@ -113,8 +96,6 @@ return {
 
 @app.delete("/reset")
 def reset_service():
-
-return {
-"mensaje":
-"Recursos reiniciados"
-}	
+    return {
+        "mensaje": "Recursos reiniciados"
+    }
